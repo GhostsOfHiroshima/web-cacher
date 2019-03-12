@@ -23,6 +23,7 @@ router.get('/*', function (req, res, next) {
     url = url.substring(10, url.length);
     url = url.replaceAll('_SLASH_', '/').replaceAll('_QUESTION_', '?');
 
+    console.log(url)
     // we have the URL at this point, check if it starts with http:// or https://
     if (!url.startsWith('http://') && !url.startsWith('https://')) return next(new Error('URL doesn\'t start with http/s'));
 
