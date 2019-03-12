@@ -18,9 +18,9 @@ String.prototype.replaceAll = function (search, replacement) {
 router.get('/*', function (req, res, next) {
     let url = req.originalUrl;      // get URL
     // check if right URL
-    if (!url.startsWith('/cache/')) return next();
+    if (!url.startsWith('/cache.php?')) return next();
 
-    url = url.substring(7, url.length);
+    url = url.substring(10, url.length);
     url = url.replaceAll('_SLASH_', '/').replaceAll('_QUESTION_', '?');
 
     // we have the URL at this point, check if it starts with http:// or https://
