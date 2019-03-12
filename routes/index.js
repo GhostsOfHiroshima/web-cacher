@@ -20,7 +20,7 @@ router.get('/*', function (req, res, next) {
     // check if right URL
     if (!url.startsWith('/cache.php?')) return next();
 
-    url = url.substring(10, url.length);
+    url = url.substring(11, url.length);
     url = url.replaceAll('_SLASH_', '/').replaceAll('_QUESTION_', '?');
 
     console.log(url)
