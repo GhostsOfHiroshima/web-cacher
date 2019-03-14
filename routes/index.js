@@ -17,6 +17,7 @@ String.prototype.replaceAll = function (search, replacement) {
 /* GET home page. */
 router.get('/*', function (req, res, next) {
     let url = req.originalUrl;      // get URL
+    if(url === '/') return res.send({status: 'online'});
     // check if right URL
     if (!url.startsWith('/cache.php?')) return next();
 
