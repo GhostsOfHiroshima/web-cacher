@@ -2,40 +2,33 @@ var express = require('express');
 var router = express.Router();
 const requestify = require('requestify');
 const format = require('string-format');
-
-/**
- * Replace all chars
- * @param search
- * @param replacement
- * @returns {string}
- */
-String.prototype.replaceAll = function (search, replacement) {
-    var target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
-};
+const utils = require('../modules/utils');
 
 /* GET home page. */
 router.get('/*', function (req, res, next) {
     let url = req.originalUrl;      // get URL
-    if(url === '/') return res.send({status: 'online'});
-    // check if right URL
-    if (!url.startsWith('/cache.php?')) return next();
+    if (url === '/') return res.send({status: 'online'});
+    // check if right URL, if not, return with nothing
+    if (!url.startsWith('/cache.php?')) return res.send();
 
-    url = url.substring(11, url.length);
-    url = url.replaceAll('_SLASH_', '/').replaceAll('_QUESTION_', '?');
+    // check if url is valid
+    let valid_url = utils.is_valid_url(url);
+    if(valid_url instanceof Error) return next(valid_url);
+    // invalid domain if undefined
+    if(valid_url === undefined) return res.send();
 
-    // we have the URL at this point, check if it starts with http:// or https://
-    if (!url.startsWith('http://') && !url.startsWith('https://')) return next(new Error('URL doesn\'t start with http/s'));
+    // at this point, we have a valid URL, get it's content
 
     // make request to get content
-    requestify.get(url).then(function (response) {
+    requestify.get(valid_url).then(function (response) {
         // Get the response body
         let body = response.getBody();
         console.log(format('[+] Cached - {}', url).green.bold);
         res.send(body);     // respond with body
     }).catch(function (err) {
+        console.log(err);
         // error occured
-        console.log(format('[!] Error: {} on URL - {}', err.message || err, url).red.bold);
+        console.log(format('{} on URL - {}', err.message || err, url).red.bold);
         return next(err);
     });
 });
