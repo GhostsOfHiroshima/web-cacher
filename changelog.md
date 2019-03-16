@@ -1,6 +1,8 @@
 16.03.2019
 ----------
 - allowing caching only for `google.com` and `gstatic.com`
+- setting content of URLs to localDB
+- localDB is flushed when new recaptcha update is available from lastgrupdate
 
 14.03.2019
 ---------

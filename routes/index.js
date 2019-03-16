@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-const requestify = require('requestify');
 const format = require('string-format');
 const utils = require('../modules/utils');
+const cacher = require('../modules/cacher');
 
 /* GET home page. */
 router.get('/*', function (req, res, next) {
@@ -18,19 +18,13 @@ router.get('/*', function (req, res, next) {
     if(valid_url === undefined) return res.send();
 
     // at this point, we have a valid URL, get it's content
-
-    // make request to get content
-    requestify.get(valid_url).then(function (response) {
-        // Get the response body
-        let body = response.getBody();
-        console.log(format('[+] Cached - {}', url).green.bold);
-        res.send(body);     // respond with body
-    }).catch(function (err) {
-        console.log(err);
-        // error occured
-        console.log(format('{} on URL - {}', err.message || err, url).red.bold);
-        return next(err);
+    cacher.cache(valid_url).then(function (content){
+        console.log(format('[+] {}', valid_url).green.bold);
+        return res.send(content);
+    }).catch(function (err){
+       return next(err);
     });
+
 });
 
 module.exports = router;
