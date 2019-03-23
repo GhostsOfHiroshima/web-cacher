@@ -91,6 +91,8 @@ module.exports = {
             // if we didn't got it from DB, set it now
             if(!from_db) return set_to_storage(url, c);     // set to storage
         }).catch(function (err){
+            if(err.code > 400 && err.code < 500) deferred.reject(new Error(format('{} response from server', err.code)));
+            else if(err.code > 500 && err.code < 600) deferred.reject(new Error(format('{} response from server', err.code)));
             deferred.reject(new Error(err.message || err));
         });
         return deferred.promise;
