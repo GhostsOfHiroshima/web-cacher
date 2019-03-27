@@ -5,6 +5,7 @@ const localDB = new NodeCache();
 const config = require('../config');
 const format = require('string-format');
 var https = require('https');
+var http = require('http');
 var fs = require('fs');
 const mimetypes = require('mime-types');
 
@@ -15,7 +16,9 @@ const mimetypes = require('mime-types');
  */
 var download_buffer = function(url) {
     let deferred = Q.defer();
-    var request = https.get(url, function(response) {
+    let protocol = https;
+    if(url.startsWith('http://')) protocol = http;
+    var request = protocol.get(url, function(response) {
         let mimetype = mimetypes.lookup(url.split('?')[0]);
         deferred.resolve({content: response, mimetype: mimetype});
     }).on('error', function(err) { // Handle errors
