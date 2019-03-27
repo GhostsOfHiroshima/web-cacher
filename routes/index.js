@@ -18,9 +18,10 @@ router.get('/*', function (req, res, next) {
     if(valid_url === undefined) return res.send();
 
     // at this point, we have a valid URL, get it's content
-    cacher.cache(valid_url).then(function (content){
+    cacher.cache(valid_url).then(function (c){
         console.log(format('[+] {}', valid_url).green.bold);
-        return res.send(content);
+        res.setHeader('Content-type', c.mimetype);              // set header of file (image, text, etc)
+        c.content.pipe(res);
     }).catch(function (err){
        return next(err);
     });
