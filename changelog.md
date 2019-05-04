@@ -1,5 +1,9 @@
+04.05.2019
+----------
+- updated jquery to latest
+
 27.03.2019
----------
+----------
 - updated ctim caching, to interpret files in response based on mimetype (text, image, etc)
 
 16.03.2019
